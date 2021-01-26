@@ -37,6 +37,7 @@ bool DbManager::AddRecord(const QString& name){
            if(query.exec())
            {
                success = true;
+               qDebug() << "addPerson ok.";
            }
            else
            {
@@ -50,4 +51,39 @@ bool DbManager::AddRecord(const QString& name){
     }
 
    return success;
+}
+
+bool DbManager::update(const QString &name_old, const QString &name_new){
+    bool success = false;
+    QSqlQuery query;
+    query.prepare("UPDATE people SET name=(:name_new) WHERE name = (:name_old)");
+    query.bindValue(":name_old", name_old);
+    query.bindValue(":name_new", name_new);
+    if(query.exec())
+    {
+        success = true;
+        qDebug() << "update ok.";
+    }
+    else
+    {
+         qDebug() << "update error:"
+                  << query.lastError();
+    }
+}
+
+bool DbManager::DeleteRow(const QString &name){
+    bool success = false;
+    QSqlQuery query;
+    query.prepare("DELETE FROM people WHERE name = (:name)");
+    query.bindValue(":name", name);
+    if(query.exec())
+    {
+        success = true;
+        qDebug() << "delete ok.";
+    }
+    else
+    {
+         qDebug() << "delete error:"
+                  << query.lastError();
+    }
 }
